@@ -22,19 +22,25 @@ This project will be made using react native, firestore, redux along with a lot 
 
 <h4>Usage</h4>
 <hr>
+
 * If you want to run on android you'll need to enable developer options and USB Debugging on your device<br/>
     `npx react-native run-android`
     
     
 <h4>Author</h4>
 <hr>
- > Dinuka Nimesh
-* Github: https://github.com/Nimesh175 "Github home"</br>
-* Linkdin: www.linkedin.com/in/dinukanimesh "Github home"
+
+  <h5>Dinuka Nimesh</h5>
+  
+* Github: https://github.com/Nimesh175
+
+</br>
+
+* Linkdin: www.linkedin.com/in/dinukanimesh 
 
 <h4> Show your support</h4>
 <hr>
- > Give a ⭐ if this project helped you!
+  Give a ⭐ if this project helped you!
 
 ![imagename](https://images.immediate.co.uk/production/volatile/sites/4/2018/12/GettyImages-918529586-35c7227.jpg?quality=90&crop=61px%2C468px%2C7710px%2C3317px&resize=960%2C408)
 
