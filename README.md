@@ -1,4 +1,4 @@
-<h3>Welcome to Instagram Clone</h3>
+<h2>Welcome to Instagram Clone</h3>
 <hr>
 
 
@@ -33,8 +33,6 @@ This project will be made using react native, firestore, redux along with a lot 
   <h5>Dinuka Nimesh</h5>
   
 * Github: https://github.com/Nimesh175
-
-</br>
 
 * Linkdin: www.linkedin.com/in/dinukanimesh 
 
