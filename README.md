@@ -12,7 +12,7 @@ This project will be made using react native, firestore, redux along with a lot 
 <h4>Install</h4>
 <hr>
 * First you need to install Nodejs and npm, this is different depending on the OS you are running, so it is easier to check
- the node [page](https://nodejs.org/en/download/ "npm download page")
+ the node https://nodejs.org/en/download/
 
 
 * Install the needed packages while in the root folder of the project<br/>
@@ -29,8 +29,8 @@ This project will be made using react native, firestore, redux along with a lot 
 <h4>Author</h4>
 <hr>
  > Dinuka Nimesh
-* Github: [@Nimesh175](https://github.com/Nimesh175 "Github home")
-* Linkdin: [@dinukanimesh](www.linkedin.com/in/dinukanimesh "Github home")
+* Github: https://github.com/Nimesh175 "Github home"</br>
+* Linkdin: www.linkedin.com/in/dinukanimesh "Github home"
 
 <h4> Show your support</h4>
 <hr>
