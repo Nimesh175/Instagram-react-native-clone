@@ -1,4 +1,4 @@
-
+// Icons: tab navigation bar
 const searchActive = require("../assets/images/search-weight-2.webp")
 const homeActive = require("../assets/images/home-fill.webp")
 const postActive = require("../assets/images/plus-fill.webp")
@@ -9,6 +9,9 @@ const homeDeActive = require("../assets/images/home.webp")
 const postDeActive = require("../assets/images/plus-outline.webp")
 const shopDeActive = require("../assets/images/shop.webp")
 const profileDeActive = require("../assets/images/profile.webp")
+
+// Image: other
+const profilePerson = require("../assets/images/profile-person.webp")
 
 export const IMAGES = {
     homeActive,
@@ -21,4 +24,6 @@ export const IMAGES = {
     shopDeActive,
     profileActive,
     profileDeActive,
+
+    profilePerson,
 }

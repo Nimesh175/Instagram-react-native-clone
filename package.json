@@ -16,6 +16,7 @@
     "native-base": "^3.2.0",
     "react": "17.0.2",
     "react-native": "0.65.1",
+    "react-native-image-picker": "^4.1.1",
     "react-native-linear-gradient": "^2.5.6",
     "react-native-responsive-fontsize": "^0.5.1",
     "react-native-safe-area-context": "^3.3.2",

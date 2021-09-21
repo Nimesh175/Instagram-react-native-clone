@@ -43,6 +43,7 @@ const TabNavigations = () => {
                     return <Image source={iconName} style={{width: size, height: size}}/>;
 
                 },
+                headerShown: false,
                 tabBarActiveTintColor: 'tomato',
                 tabBarInactiveTintColor: 'gray',
                 tabBarLabel: () => {

@@ -1,7 +1,13 @@
 import React from 'react';
-import {StyleSheet, View} from 'react-native';
+import { StyleSheet, View } from 'react-native';
 
 const HomeScreen = ({navigation}) => {
+
+    React.useEffect(() => {
+        //
+    },[])
+
+
     return (
         <View style={styles.container}>
 

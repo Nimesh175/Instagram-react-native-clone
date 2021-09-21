@@ -1,6 +1,6 @@
 import { Button, Center, Input, Text } from 'native-base';
 import React from 'react';
-import { StyleSheet, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, TouchableOpacity, View } from 'react-native';
 import EmptyView from '../../components/EmptyView';
 import { colors, dimensions, fontFamilies } from '../../configurations/constants';
 
