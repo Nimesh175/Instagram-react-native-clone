@@ -11,7 +11,9 @@ export const colors = {
     white: '#FFFFFF',
     orange: '#FFB300',
     black: '#000000',
+    black50: 'rgba(0,0,0,0.5)',
     blue: 'blue',
+    fbBlue: '#0099FF',
 }
 
 export const fontSizes = {
@@ -37,6 +39,7 @@ export const fontFamilies = {
     robotoMedium: 'Roboto-Medium',
     robotoRegular: 'Roboto-Regular',
     robotoThin: 'Roboto-Thin',
+    blackBerry: 'BlackberryJam',
 
 }
 

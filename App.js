@@ -13,9 +13,9 @@ import {
   StyleSheet,
 } from 'react-native';
 
+import { NativeBaseProvider } from 'native-base';
 import { NavigationContainer } from '@react-navigation/native';
 import StackNavigations from './src/navigations/StackNavigations';
-
 
 const App = () => {
 
@@ -26,7 +26,9 @@ const App = () => {
       <StatusBar barStyle='dark-content' backgroundColor="#fff" />
 
       <NavigationContainer>
-        <StackNavigations/>
+        <NativeBaseProvider>
+          <StackNavigations/>
+        </NativeBaseProvider>
       </NavigationContainer>
 
     </SafeAreaView>
