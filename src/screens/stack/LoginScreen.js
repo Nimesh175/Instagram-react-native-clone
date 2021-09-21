@@ -6,7 +6,6 @@ import { colors, dimensions, fontFamilies } from '../../configurations/constants
 
 const LoginScreen = ({navigation}) => {
     return (
-
        <Center flex={1} style={styles?.container}>
         {/* header: logo name */}
         <Text fontSize="5xl" style={styles?.textLogo}>Inxtagram</Text>
@@ -15,7 +14,7 @@ const LoginScreen = ({navigation}) => {
         {/* section: input fields */}
        <Input
             w="90%"
-            mx={3}
+            mx={3} 
             placeholder="Username"
             _light={{
                 placeholderTextColor: "blueGray.400",
