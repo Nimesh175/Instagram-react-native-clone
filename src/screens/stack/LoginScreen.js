@@ -30,6 +30,7 @@ const LoginScreen = ({navigation}) => {
         <Input
             w="90%"
             mx={3}
+            secureTextEntry
             placeholder="Password"
             _light={{
                 placeholderTextColor: "blueGray.400",
@@ -44,6 +45,7 @@ const LoginScreen = ({navigation}) => {
         {/* button: default login button */}
         <Button 
             w="90%" 
+            isDisabled
             style={styles?.button}
             onPress={() => navigation.navigate('Tab')}
         >
@@ -87,13 +89,6 @@ const LoginScreen = ({navigation}) => {
         </View>
 
       </Center>
-        
-
-        // <View style={styles.container}>
-        //     <Button style={{marginTop: 10}} title="Sign In" onPress={() => navigation.navigate('Tab')}/>
-        //     <Button style={{marginTop: 10}} title="Sign Up" color="#841584"
-        //             onPress={() => navigation.navigate('SignUp')}/>
-        // </View>
     );
 };
 
