@@ -18,9 +18,6 @@ import { NavigationContainer } from '@react-navigation/native';
 import StackNavigations from './src/navigations/StackNavigations';
 
 const App = () => {
-
-
-
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle='dark-content' backgroundColor="#fff" />
