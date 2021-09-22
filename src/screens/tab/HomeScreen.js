@@ -1,12 +1,11 @@
-import { Center, Text } from 'native-base';
+import { Center } from 'native-base';
 import React from 'react';
-import { StyleSheet, View, FlatList } from 'react-native';
-import { people15, newsPost15 } from '../../@fake-data/index';
-import EmptyView from '../../components/EmptyView';
+import { FlatList, StyleSheet, View } from 'react-native';
+import { newsPost15, people15 } from '../../@fake-data/index';
 import HomeHeader from '../../components/home/HomeHeader';
 import NewsComponent from '../../components/home/NewsComponent';
 import StatusComponent from '../../components/home/StatusComponent';
-import {colors, dimensions, fontFamilies, fontSizes} from '../../configurations/constants';
+import { colors, dimensions } from '../../configurations/constants';
 
 const HomeScreen = ({navigation}) => {
 
@@ -24,9 +23,11 @@ const HomeScreen = ({navigation}) => {
             {/* container: status bar */}
             <View style={styles?.statusbar}>
                 <FlatList
+                maxToRenderPerBatch={10}
                 showsHorizontalScrollIndicator={false}
                 horizontal
                 data={people15}
+                ListFooterComponent={<View style={{width:dimensions?.heightLevel4 }}></View>}
                 renderItem={({ item }) => (
                 <StatusComponent item={item} />
                 )}
@@ -35,13 +36,14 @@ const HomeScreen = ({navigation}) => {
             </View>
 
              {/* container: news feed */}
-             <Center style={styles?.newsFeed}>
+             <Center>
                 <FlatList
                 refreshing={true}
+                maxToRenderPerBatch={5}
                 showsVerticalScrollIndicator={false}
                 data={newsPost15}
                 keyExtractor={(item) => item.id}
-                onEndReached={() => console.log("FF")}
+                onEndReached={() => console.log("FlatList End.")}
                 ListFooterComponent={<View style={{height:dimensions?.heightLevel10 * 1.5}}></View>}
                 renderItem={({ item }) => (
                     <NewsComponent item={item} />
@@ -64,9 +66,6 @@ const styles = StyleSheet.create({
         height: dimensions?.heightLevel5 * 1.6,
     },
 
-    newsFeed: {
-
-    }
 });
 
 export default HomeScreen;
