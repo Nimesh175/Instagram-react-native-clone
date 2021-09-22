@@ -12,6 +12,8 @@ const profileDeActive = require("../assets/images/profile.webp")
 
 // Image: other
 const profilePerson = require("../assets/images/profile-person.webp")
+const chatBubble = require("../assets/images/chat-bubble.webp")
+const messanger = require("../assets/images/messenger.webp")
 
 export const IMAGES = {
     homeActive,
@@ -26,4 +28,6 @@ export const IMAGES = {
     profileDeActive,
 
     profilePerson,
+    chatBubble,
+    messanger,
 }

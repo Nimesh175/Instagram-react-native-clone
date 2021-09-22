@@ -12,6 +12,7 @@ export const colors = {
     orange: '#FFB300',
     black: '#000000',
     black50: 'rgba(0,0,0,0.5)',
+    black25: 'rgba(0,0,0,0.25)',
     blue: 'blue',
     fbBlue: '#0099FF',
 }
