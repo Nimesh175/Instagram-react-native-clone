@@ -14,6 +14,13 @@ const profileDeActive = require("../assets/images/profile.webp")
 const profilePerson = require("../assets/images/profile-person.webp")
 const chatBubble = require("../assets/images/chat-bubble.webp")
 const messanger = require("../assets/images/messenger.webp")
+const more = require("../assets/images/more.webp")
+const heart = require("../assets/images/heart.webp")
+const heartRed = require("../assets/images/heart-red.webp")
+const send_1 = require("../assets/images/send-weight-1.webp")
+const send_2 = require("../assets/images/send-weight-2.webp")
+const bookmark = require("../assets/images/bookmark.webp")
+const bookmarkActive = require("../assets/images/bookmark-fill.webp")
 
 export const IMAGES = {
     homeActive,
@@ -30,4 +37,11 @@ export const IMAGES = {
     profilePerson,
     chatBubble,
     messanger,
+    more,
+    heart,
+    heartRed,
+    send_1,
+    send_2,
+    bookmark,
+    bookmarkActive,
 }
