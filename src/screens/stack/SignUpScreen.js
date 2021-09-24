@@ -5,10 +5,12 @@ import {launchImageLibrary} from 'react-native-image-picker';
 import { IMAGES } from '../../assets';
 import EmptyView from '../../components/EmptyView';
 import { colors, dimensions, fontFamilies } from '../../configurations/constants';
-import {GoogleSignin, GoogleSigninButton} from '@react-native-google-signin/google-signin';
+import {GoogleSignin, GoogleSigninButton, statusCodes} from '@react-native-google-signin/google-signin';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import Loader from '../../components/Loader';
+import ImgToBase64 from 'react-native-image-base64';
+import * as EmailValidator from 'email-validator';
 
 const SignUpScreen = ({navigation}) => {
 
@@ -19,10 +21,20 @@ const SignUpScreen = ({navigation}) => {
         fileUri: undefined
     });
 
+
     // GOOGLE: signup state
     const [loggedIn, setloggedIn] = React.useState(false);
     const [googleLoader, setGoogleLoader] = React.useState(false);
-    const [userInfo, setuserInfo] = React.useState([]);
+    const [userDetails, setUserDetails] = React.useState({
+        fullName: '',
+        email: '',
+        password: '',
+        reTypePassword: '',
+        base64String: null,
+        base64Type: null,
+    });
+    // const [userInfo, setuserInfo] = React.useState([]);
+
     React.useEffect(() => {
         GoogleSignin.configure({
             webClientId:
@@ -61,6 +73,19 @@ const SignUpScreen = ({navigation}) => {
                 fileData: response.data,
                 fileUri: response.uri
                 });
+
+
+                ImgToBase64.getBase64String(response?.assets[0]?.uri)
+                .then(base64String => {
+                    setUserDetails({
+                        ...userDetails,
+                        base64String: base64String,
+                        base64Type: response?.assets[0]?.type,
+                    })
+                })
+                .catch(err => doSomethingWith(err));
+
+
             }
             });
     }
@@ -84,9 +109,10 @@ const SignUpScreen = ({navigation}) => {
       * optional: 02
       */
     function renderFileUri() {
-        if (imageState.fileUri) {
+        if (userDetails.base64String && userDetails.base64Type) {
             return <Image
-            source={{ uri: imageState?.fileUri }}
+            // source={{ uri: userDetails.base64String }}
+            source={{uri: `data:${userDetails.base64Type};base64,${userDetails.base64String}`}}
             style={styles?.images}
             />
         } else {
@@ -95,10 +121,77 @@ const SignUpScreen = ({navigation}) => {
             style={styles?.images}
             />
         }
-    }  
+    } 
+    
     
 
-    // google sign up
+  /* EMAIL/PASSWORD: sign up function */
+  const EmailPasswordLoginSignOutHandler = async () => {
+    setGoogleLoader(true)
+    // email validator
+    if (EmailValidator.validate(userDetails?.email) && userDetails?.password != '' && userDetails?.password.length > 5) {
+        
+        if (userDetails.password === userDetails.reTypePassword) {
+            auth()
+            .createUserWithEmailAndPassword(userDetails.email, "firebaseDefaultPassword!")
+            .then((createuser) => {
+                //TODO: auth/email-not-use
+                console.log("RESULT: ", createuser)
+                
+    
+                    //firestore: save new user
+                    firestore()
+                    .collection('Users')
+                    .doc(createuser.user.uid)
+                    .set({
+                        uid: createuser.user.uid,
+                        displayName: userDetails.fullName,
+                        email: userDetails.email,
+                        photoURL: null,
+                        base64String: userDetails?.base64String,
+                        base64Type: userDetails?.base64Type,
+                        password: userDetails.password,
+                    })
+                    .then(() => {
+                        setGoogleLoader(false)
+                        console.log("Email/PASSWORD: sign-up successfully");
+                        setloggedIn(true)
+                        alert("sign-up successfully")
+                        navigation.goBack();
+                    })
+                    .catch(error => {
+                        setGoogleLoader(false)
+                        console.log("ERROR: User not added!")});
+    
+            })
+            .catch(error => {
+                if (error.code === 'auth/email-already-in-use') {
+                console.log('That email address is already in use!');
+                //TODO: auth/email-already-in-use
+                    alert('Sign in, already you have an account.!');
+                }
+    
+                if (error.code === 'auth/invalid-email') {
+                console.log('That email address is invalid!');
+                }
+                setGoogleLoader(false)
+                console.warn(error);
+            });
+        } else {
+            alert("re-type password not matched!")
+        }
+
+    
+    } else {
+        setGoogleLoader(false)
+        alert("'That email address is invalid or Password should be atleast 6 characters.")
+    }
+}
+
+
+    
+
+    /* GOOGLE: sign up */
     const GoogleSignInOutHandler = async (props) => {
         setGoogleLoader(true)
         try{
@@ -113,7 +206,7 @@ const SignUpScreen = ({navigation}) => {
         .signInWithCredential(googleCredential)
         .then(creteUser => {
             setGoogleLoader(false)
-            const {displayName, email, metadata, uid, photoURL, phoneNumber} = creteUser.user;
+            const {displayName, email,  uid, photoURL } = creteUser.user;
             const subscriber = 
             firestore()
             .collection('Users')
@@ -144,7 +237,6 @@ const SignUpScreen = ({navigation}) => {
                                 displayName: displayName,
                                 email: email,
                                 photoURL: photoURL,
-                                phoneNumber: phoneNumber,
                                 password: null,
                             })
                             .then(() => {
@@ -211,6 +303,8 @@ const SignUpScreen = ({navigation}) => {
          <Input
             w="90%"
             mx={3}
+            value={userDetails?.fullName}
+            onChangeText={ data => setUserDetails({...userDetails, fullName: data})}
             placeholder="Full Name"
             _light={{
                 placeholderTextColor: "blueGray.400",
@@ -225,6 +319,8 @@ const SignUpScreen = ({navigation}) => {
             w="90%"
             mx={3}
             placeholder="Email"
+            value={userDetails?.email}
+            onChangeText={ data => setUserDetails({...userDetails, email: data})}
             _light={{
                 placeholderTextColor: "blueGray.400",
             }}
@@ -240,6 +336,8 @@ const SignUpScreen = ({navigation}) => {
             mx={3}
             secureTextEntry 
             placeholder="Password"
+            value={userDetails?.password}
+            onChangeText={ data => setUserDetails({...userDetails, password: data})}
             _light={{
                 placeholderTextColor: "blueGray.400",
             }}
@@ -255,6 +353,8 @@ const SignUpScreen = ({navigation}) => {
             mx={3}
             secureTextEntry 
             placeholder="ReType Password"
+            value={userDetails?.reTypePassword}
+            onChangeText={ data => setUserDetails({...userDetails, reTypePassword: data})}
             _light={{
                 placeholderTextColor: "blueGray.400",
             }}
@@ -268,9 +368,9 @@ const SignUpScreen = ({navigation}) => {
         {/* button: default login button */}
         <Button 
             w="90%" 
-            isDisabled
+            isDisabled={!(userDetails.email && userDetails.password)}
             style={styles?.button}
-            onPress={() => navigation.navigate('Tab')}
+            onPress={() => EmailPasswordLoginSignOutHandler()}
         >
           Sign up
         </Button>

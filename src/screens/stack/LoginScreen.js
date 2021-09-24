@@ -51,7 +51,6 @@ const LoginScreen = ({navigation}) => {
                     //     displayName: email,
                     //     email: email,
                     //     photoURL: null,
-                    //     phoneNumber: null,
                     //     password: password,
                     // })
                     // .then(() => {
@@ -78,17 +77,16 @@ const LoginScreen = ({navigation}) => {
                 .collection('Users')
                 .get()
                 .then(result => {
-                    console.log("++++++++++++++++++++++");
-                    console.log(result);
-                    console.log(email, " === ", password);
                     result.forEach(data => {
                         console.log(data._data);
                         if(data._data.email === email) {
                             if(data._data.password === password) {
+                                setGoogleLoader(false)
                                 navigation.navigate('Tab');
                             }
                             else {
                                 alert("Password is incorrect.")
+                                setGoogleLoader(false)
                             }
                             return;
                         }
@@ -98,8 +96,9 @@ const LoginScreen = ({navigation}) => {
     
                 if (error.code === 'auth/invalid-email') {
                 console.log('That email address is invalid!');
-                }
                 setGoogleLoader(false)
+                }
+                
                 console.warn(error);
             });
         } else {
@@ -124,7 +123,7 @@ const LoginScreen = ({navigation}) => {
         .signInWithCredential(googleCredential)
         .then(creteUser => {
             setGoogleLoader(false)
-            const {displayName, email, metadata, uid, photoURL, phoneNumber} = creteUser.user;
+            const {displayName, email, uid, photoURL } = creteUser.user;
             
             firestore()
             .collection('Users')
@@ -157,7 +156,6 @@ const LoginScreen = ({navigation}) => {
                                 displayName: displayName,
                                 email: email,
                                 photoURL: photoURL,
-                                phoneNumber: phoneNumber,
                                 password: null,
                             })
                             .then(() => {
