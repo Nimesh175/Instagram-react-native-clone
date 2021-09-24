@@ -4,6 +4,7 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import EmptyView from '../../components/EmptyView';
 import {colors, dimensions, fontFamilies} from '../../configurations/constants';
 import {GoogleSignin, GoogleSigninButton} from '@react-native-google-signin/google-signin';
+import * as EmailValidator from 'email-validator';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import Loader from '../../components/Loader';
@@ -14,6 +15,9 @@ const LoginScreen = ({navigation}) => {
     const [googleLoader, setGoogleLoader] = React.useState(false);
     const [userInfo, setuserInfo] = React.useState([]);
 
+    const [email, setEmail] = React.useState('');
+    const [password, setPassword] = React.useState('');
+
 
     React.useEffect(() => {
         GoogleSignin.configure({
@@ -22,6 +26,90 @@ const LoginScreen = ({navigation}) => {
           });
     }, []);
 
+
+    /* EMAIL/PASSWORD: login function */
+    const EmailPasswordLoginSignOutHandler = async () => {
+        setGoogleLoader(true)
+        // email validator
+        if (EmailValidator.validate(email) && password != '' && password.length > 5) {
+            
+            auth()
+            .createUserWithEmailAndPassword(email, "firebaseDefaultPassword!")
+            .then((createuser) => {
+                //TODO: auth/email-not-use
+                console.log("RESULT: ", createuser)
+                setGoogleLoader(false)
+
+                alert("Sign up, ypu don't have an account.")
+
+                    //firestore: save new user
+                    // firestore()
+                    // .collection('Users')
+                    // .doc(createuser.user.uid)
+                    // .set({
+                    //     uid: createuser.user.uid,
+                    //     displayName: email,
+                    //     email: email,
+                    //     photoURL: null,
+                    //     phoneNumber: null,
+                    //     password: password,
+                    // })
+                    // .then(() => {
+                    //     console.log("Email/PASSWORD: sign-up successfully");
+                    //     setloggedIn(true)
+                    //     //// save to firestore db and log in
+                    //     navigation.navigate('Tab');
+                    // })
+                    // .catch(error => console.log("ERROR: User not added!"));
+
+
+
+                // auth()
+                // .signOut()
+                // .then(() => console.log('User signed out!'));
+            })
+            .catch(error => {
+                if (error.code === 'auth/email-already-in-use') {
+                console.log('That email address is already in use!');
+                //TODO: auth/email-already-in-use
+
+                   
+                firestore()
+                .collection('Users')
+                .get()
+                .then(result => {
+                    console.log("++++++++++++++++++++++");
+                    console.log(result);
+                    console.log(email, " === ", password);
+                    result.forEach(data => {
+                        console.log(data._data);
+                        if(data._data.email === email) {
+                            if(data._data.password === password) {
+                                navigation.navigate('Tab');
+                            }
+                            else {
+                                alert("Password is incorrect.")
+                            }
+                            return;
+                        }
+                    })
+                })
+                }
+    
+                if (error.code === 'auth/invalid-email') {
+                console.log('That email address is invalid!');
+                }
+                setGoogleLoader(false)
+                console.warn(error);
+            });
+        } else {
+            setGoogleLoader(false)
+            alert("'That email address is invalid or Password should be atleast 6 characters.")
+        }
+    }
+
+
+    /* GOOGLE: login function */
     const GoogleSignInOutHandler = async (props) => {
         setGoogleLoader(true)
         try{
@@ -61,7 +149,7 @@ const LoginScreen = ({navigation}) => {
                         if (!props?.isSignIn) {
                          //TODO: do somethings with sign-up
                         
-                            //firestore: create new user
+                            //firestore: save new user
                             firestore()
                             .collection('Users')
                             .add({
@@ -70,6 +158,7 @@ const LoginScreen = ({navigation}) => {
                                 email: email,
                                 photoURL: photoURL,
                                 phoneNumber: phoneNumber,
+                                password: null,
                             })
                             .then(() => {
                                 console.log("GOOGLE: sign-up successfully");
@@ -93,6 +182,9 @@ const LoginScreen = ({navigation}) => {
     }
 
 
+
+
+
     return (
     <>
         <Loader isLoading={googleLoader}/>
@@ -106,6 +198,8 @@ const LoginScreen = ({navigation}) => {
             w="90%"
             mx={3}
             placeholder="Username"
+            value={email}
+            onChangeText={(data) => setEmail(data)}
             _light={{
                 placeholderTextColor: "blueGray.400",
             }}
@@ -120,6 +214,8 @@ const LoginScreen = ({navigation}) => {
             w="90%"
             mx={3}
             secureTextEntry
+            value={password}
+            onChangeText={(data) => setPassword(data)}
             placeholder="Password"
             _light={{
                 placeholderTextColor: "blueGray.400",
@@ -134,9 +230,9 @@ const LoginScreen = ({navigation}) => {
         {/* button: default login button */}
         <Button
             w="90%"
-            isDisabled
+            isDisabled={false}
             style={styles?.button}
-            onPress={() => navigation.navigate('Tab')}
+            onPress={() => EmailPasswordLoginSignOutHandler()}
         >
           Log in
         </Button>

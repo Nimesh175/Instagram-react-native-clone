@@ -145,9 +145,11 @@ const SignUpScreen = ({navigation}) => {
                                 email: email,
                                 photoURL: photoURL,
                                 phoneNumber: phoneNumber,
+                                password: null,
                             })
                             .then(() => {
                                 console.log("GOOGLE: sign-up successfully");
+                                alert("sign-up successfully")
                                 setloggedIn(true)
                                 navigation.goBack();
                             })
