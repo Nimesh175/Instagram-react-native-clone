@@ -32,7 +32,15 @@ const LoginScreen = ({navigation}) => {
         const credential =await auth()
         .signInWithCredential(googleCredential)
         .then(creteUser => {
-            const uid = creteUser.user.uid;
+            const {displayName, email, metadata, uid, photoURL, phoneNumber} = creteUser.user;
+         
+            console.log("displayName: ", displayName);
+            console.log("email: ", email);
+            console.log("metadata: ", metadata);
+            console.log("uid: ", uid);
+            console.log("photoUrl: ", photoURL);
+            console.log("phoneNumber: ", phoneNumber);
+
             const subscriber = firestore().collection('Users').doc(uid);
                 subscriber.get().then(doc => {
                     if (doc?.exists) {
@@ -41,6 +49,19 @@ const LoginScreen = ({navigation}) => {
                     //// doc.data() will be undefined in this case
                     console.log('No such document!');
                     //firestore: create new user
+                    firestore()
+                    .collection('Users')
+                    .add({
+                        uid: uid,
+                        displayName: displayName,
+                        email: email,
+                        photoURL: photoURL,
+                        phoneNumber: phoneNumber,
+                    })
+                    .then(() => {
+                        console.log('User added!');
+                    })
+                    .catch(error => console.log("ERROR: User not added!"));
                     
                     }
                 });
