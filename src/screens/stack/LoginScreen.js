@@ -3,12 +3,39 @@ import React from 'react';
 import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import EmptyView from '../../components/EmptyView';
 import {colors, dimensions, fontFamilies} from '../../configurations/constants';
-
+import {GoogleSignin, GoogleSigninButton} from '@react-native-google-signin/google-signin';
 
 const LoginScreen = ({navigation}) => {
 
     const [loggedIn, setloggedIn] = React.useState(false);
     const [userInfo, setuserInfo] = React.useState([]);
+
+
+    React.useEffect(() => {
+        GoogleSignin.configure({
+            webClientId:
+              '54254594495-c66dt4egj57oo0evulrbusj9i6vkpfl3.apps.googleusercontent.com',
+          });
+    }, []);
+
+    const GoogleSignIn = async () => {
+        try{
+            // Get the users ID token
+        const {idToken, user} = await GoogleSignin.signIn();
+
+        // Create a Google credential with the token
+        const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+
+        // Sign-in the user with the credential
+        const credential = auth()
+        .signInWithCredential(googleCredential)
+
+
+        } catch(error) {
+
+        }
+    }
+
 
     return (
        <Center flex={1} style={styles?.container}>
@@ -71,19 +98,19 @@ const LoginScreen = ({navigation}) => {
         <EmptyView style={{marginTop: dimensions.heightLevel1}}/>
 
         {/* button: google login button */}
-        {/* <Center style={styles.body}>
+        <Center style={styles.body}>
             <View style={styles.sectionContainer}>
             <GoogleSigninButton
                 style={{width: 250, height: 48}}
                 size={GoogleSigninButton.Size.Wide}
                 color={GoogleSigninButton.Color.Dark}
-                onPress={onGoogleButtonPress}
+                onPress={GoogleSignIn}
             />
             </View>
             <View style={styles.buttonContainer}>
             {!loggedIn && <Text>You are currently logged out</Text>}
             </View>
-        </Center> */}
+        </Center>
 
 
         {/* footer: sign up */}
