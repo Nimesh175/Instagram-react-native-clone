@@ -5,6 +5,10 @@ import {launchImageLibrary} from 'react-native-image-picker';
 import { IMAGES } from '../../assets';
 import EmptyView from '../../components/EmptyView';
 import { colors, dimensions, fontFamilies } from '../../configurations/constants';
+import {GoogleSignin, GoogleSigninButton} from '@react-native-google-signin/google-signin';
+import firestore from '@react-native-firebase/firestore';
+import auth from '@react-native-firebase/auth';
+import Loader from '../../components/Loader';
 
 const SignUpScreen = ({navigation}) => {
 
@@ -14,6 +18,19 @@ const SignUpScreen = ({navigation}) => {
         fileData: undefined,
         fileUri: undefined
     });
+
+    // GOOGLE: signup state
+    const [loggedIn, setloggedIn] = React.useState(false);
+    const [googleLoader, setGoogleLoader] = React.useState(false);
+    const [userInfo, setuserInfo] = React.useState([]);
+    React.useEffect(() => {
+        GoogleSignin.configure({
+            webClientId:
+              '54254594495-c66dt4egj57oo0evulrbusj9i6vkpfl3.apps.googleusercontent.com',
+          });
+    }, []);
+
+
 
     // react native image picker
     // step: 01
@@ -67,21 +84,93 @@ const SignUpScreen = ({navigation}) => {
       * optional: 02
       */
     function renderFileUri() {
-    if (imageState.fileUri) {
-        return <Image
-        source={{ uri: imageState?.fileUri }}
-        style={styles?.images}
-        />
-    } else {
-        return <Image
-        source={IMAGES?.profilePerson}
-        style={styles?.images}
-        />
-    }
+        if (imageState.fileUri) {
+            return <Image
+            source={{ uri: imageState?.fileUri }}
+            style={styles?.images}
+            />
+        } else {
+            return <Image
+            source={IMAGES?.profilePerson}
+            style={styles?.images}
+            />
+        }
     }  
     
 
+    // google sign up
+    const GoogleSignInOutHandler = async (props) => {
+        setGoogleLoader(true)
+        try{
+            // Get the users ID token
+        const {idToken, user} = await GoogleSignin.signIn();
+
+        // Create a Google credential with the token
+        const googleCredential =await auth.GoogleAuthProvider.credential(idToken);
+
+        // Sign-in the user with the credential
+        const credential =await auth()
+        .signInWithCredential(googleCredential)
+        .then(creteUser => {
+            setGoogleLoader(false)
+            const {displayName, email, metadata, uid, photoURL, phoneNumber} = creteUser.user;
+            const subscriber = 
+            firestore()
+            .collection('Users')
+            .doc(uid)
+            .get().then(doc => {
+                if ( doc?.exists) {
+                        console.log('Document data:', doc?.data());
+                        alert("Sign in, already you have an account!")
+                        if(props?.isSignIn) {
+                            //TODO: do somethings with sign-in
+                            console.log("GOOGLE: sign-in successfully");
+                            setloggedIn(true)
+                        }
+
+                           
+                    } else {
+                         //// doc.data() will be undefined in this case
+                        console.log('No such document!');
+                        if (!props?.isSignIn) {
+                         //TODO: do somethings with sign-up
+                        
+                            // firestore: create new user
+                            firestore()
+                            .collection('Users')
+                            .doc(uid)
+                            .set({
+                                uid: uid,
+                                displayName: displayName,
+                                email: email,
+                                photoURL: photoURL,
+                                phoneNumber: phoneNumber,
+                            })
+                            .then(() => {
+                                console.log("GOOGLE: sign-up successfully");
+                                setloggedIn(true)
+                                navigation.goBack();
+                            })
+                            .catch(error => console.log("ERROR: User not added!"));
+                            
+                        }
+                    }
+                  
+                });
+        });
+
+        // GOOGLE: sign out: Temperary
+        await GoogleSignin.signOut();
+
+        } catch(error) {
+            console.log("SIGNIN ERROR: ", error);
+            setGoogleLoader(false)
+        }
+    }
+
     return (
+        <>
+         <Loader isLoading={googleLoader}/>
        <Center flex={1} style={styles?.container}>
         {/* header section: logo name */}
         <Text fontSize="5xl" style={styles?.textLogo}>Inxtagram</Text>
@@ -94,9 +183,9 @@ const SignUpScreen = ({navigation}) => {
         <Button 
             w="90%" 
             style={styles?.button}
-            onPress={() => navigation.navigate('Tab')}
+            onPress={() => GoogleSignInOutHandler({isSignIn: false})}
         >
-            Sign up with facebook
+            Sign up with Google
         </Button>
 
         <EmptyView style={{marginTop: dimensions.heightLevel2}}/>
@@ -194,7 +283,7 @@ const SignUpScreen = ({navigation}) => {
 
 
         
-        {/* footer: sign up */}
+        {/* footer: sign in */}
         <View style={styles?.footer}>
             <Text fontSize="sm">Have an account? </Text>
             <TouchableOpacity
@@ -205,6 +294,7 @@ const SignUpScreen = ({navigation}) => {
         </View>
 
       </Center>
+      </>
     );
 };
 

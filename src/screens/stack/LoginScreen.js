@@ -6,10 +6,12 @@ import {colors, dimensions, fontFamilies} from '../../configurations/constants';
 import {GoogleSignin, GoogleSigninButton} from '@react-native-google-signin/google-signin';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
+import Loader from '../../components/Loader';
 
 const LoginScreen = ({navigation}) => {
 
     const [loggedIn, setloggedIn] = React.useState(false);
+    const [googleLoader, setGoogleLoader] = React.useState(false);
     const [userInfo, setuserInfo] = React.useState([]);
 
 
@@ -20,7 +22,8 @@ const LoginScreen = ({navigation}) => {
           });
     }, []);
 
-    const GoogleSignIn = async () => {
+    const GoogleSignInOutHandler = async (props) => {
+        setGoogleLoader(true)
         try{
             // Get the users ID token
         const {idToken, user} = await GoogleSignin.signIn();
@@ -32,48 +35,67 @@ const LoginScreen = ({navigation}) => {
         const credential =await auth()
         .signInWithCredential(googleCredential)
         .then(creteUser => {
+            setGoogleLoader(false)
             const {displayName, email, metadata, uid, photoURL, phoneNumber} = creteUser.user;
-         
-            console.log("displayName: ", displayName);
-            console.log("email: ", email);
-            console.log("metadata: ", metadata);
-            console.log("uid: ", uid);
-            console.log("photoUrl: ", photoURL);
-            console.log("phoneNumber: ", phoneNumber);
+            
+            firestore()
+            .collection('Users')
+            .doc(uid)
+            .get()
+            .then(doc => {
+                if ( doc?.exists) {
+                        console.log('Document data:', doc?.data());
 
-            const subscriber = firestore().collection('Users').doc(uid);
-                subscriber.get().then(doc => {
-                    if (doc?.exists) {
-                    console.log('Document data:', doc?.data());
+                        if(props?.isSignIn) {
+                            //TODO: do somethings with sign-in
+                            console.log("GOOGLE: sign-in successfully");
+                            setloggedIn(true)
+                            navigation.navigate('Tab');
+                        }
+
+                           
                     } else {
-                    //// doc.data() will be undefined in this case
-                    console.log('No such document!');
-                    //firestore: create new user
-                    firestore()
-                    .collection('Users')
-                    .add({
-                        uid: uid,
-                        displayName: displayName,
-                        email: email,
-                        photoURL: photoURL,
-                        phoneNumber: phoneNumber,
-                    })
-                    .then(() => {
-                        console.log('User added!');
-                    })
-                    .catch(error => console.log("ERROR: User not added!"));
-                    
+                         //// doc.data() will be undefined in this case
+                        console.log('No such document!');
+                        alert("Sign up, you don't have an account!")
+                        if (!props?.isSignIn) {
+                         //TODO: do somethings with sign-up
+                        
+                            //firestore: create new user
+                            firestore()
+                            .collection('Users')
+                            .add({
+                                uid: uid,
+                                displayName: displayName,
+                                email: email,
+                                photoURL: photoURL,
+                                phoneNumber: phoneNumber,
+                            })
+                            .then(() => {
+                                console.log("GOOGLE: sign-up successfully");
+                                setloggedIn(true)
+                            })
+                            .catch(error => console.log("ERROR: User not added!"));
+                            
+                        }
                     }
+                  
                 });
         });
+
+        // GOOGLE: sign out: Temperary
         await GoogleSignin.signOut();
+
         } catch(error) {
             console.log("SIGNIN ERROR: ", error);
+            setGoogleLoader(false)
         }
     }
 
 
     return (
+    <>
+        <Loader isLoading={googleLoader}/>
        <Center flex={1} style={styles?.container}>
         {/* header: logo name */}
         <Text fontSize="5xl" style={styles?.textLogo}>Inxtagram</Text>
@@ -140,7 +162,7 @@ const LoginScreen = ({navigation}) => {
                 style={{width: 250, height: 48}}
                 size={GoogleSigninButton.Size.Wide}
                 color={GoogleSigninButton.Color.Dark}
-                onPress={GoogleSignIn}
+                onPress={() => GoogleSignInOutHandler({isSignIn: true})}
             />
             </View>
             <View style={styles.buttonContainer}>
@@ -160,6 +182,7 @@ const LoginScreen = ({navigation}) => {
         </View>
 
       </Center>
+      </>
     );
 };
 
