@@ -1,10 +1,15 @@
-import { Button, Center, Input, Text } from 'native-base';
+import {Button, Center, Input, Text} from 'native-base';
 import React from 'react';
-import { StyleSheet, TouchableOpacity, View } from 'react-native';
+import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import EmptyView from '../../components/EmptyView';
-import { colors, dimensions, fontFamilies } from '../../configurations/constants';
+import {colors, dimensions, fontFamilies} from '../../configurations/constants';
+
 
 const LoginScreen = ({navigation}) => {
+
+    const [loggedIn, setloggedIn] = React.useState(false);
+    const [userInfo, setuserInfo] = React.useState([]);
+
     return (
        <Center flex={1} style={styles?.container}>
         {/* header: logo name */}
@@ -14,7 +19,7 @@ const LoginScreen = ({navigation}) => {
         {/* section: input fields */}
        <Input
             w="90%"
-            mx={3} 
+            mx={3}
             placeholder="Username"
             _light={{
                 placeholderTextColor: "blueGray.400",
@@ -42,8 +47,8 @@ const LoginScreen = ({navigation}) => {
         <EmptyView style={{marginTop: dimensions.heightLevel1}}/>
 
         {/* button: default login button */}
-        <Button 
-            w="90%" 
+        <Button
+            w="90%"
             isDisabled
             style={styles?.button}
             onPress={() => navigation.navigate('Tab')}
@@ -65,19 +70,23 @@ const LoginScreen = ({navigation}) => {
 
         <EmptyView style={{marginTop: dimensions.heightLevel1}}/>
 
-        {/* button: facebook login button */}
-        <Button 
-            w="90%" 
-            style={styles?.button}
-            onPress={() => navigation.navigate('Tab')}
-        >
-          Log in as facbook
-        </Button>
+        {/* button: google login button */}
+        {/* <Center style={styles.body}>
+            <View style={styles.sectionContainer}>
+            <GoogleSigninButton
+                style={{width: 250, height: 48}}
+                size={GoogleSigninButton.Size.Wide}
+                color={GoogleSigninButton.Color.Dark}
+                onPress={onGoogleButtonPress}
+            />
+            </View>
+            <View style={styles.buttonContainer}>
+            {!loggedIn && <Text>You are currently logged out</Text>}
+            </View>
+        </Center> */}
 
-        <EmptyView style={{marginTop: dimensions.heightLevel1}}/>
 
         {/* footer: sign up */}
-      
         <View style={styles?.footer}>
             <Text fontSize="sm">Don't have an account? </Text>
             <TouchableOpacity
@@ -118,7 +127,7 @@ const styles = StyleSheet.create({
         backgroundColor: colors?.white,
         paddingHorizontal: dimensions?.paddingLevel1,
         color: colors?.black50,
-    }, 
+    },
 
     footer: {
         flexDirection: 'row',

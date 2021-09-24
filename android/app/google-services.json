@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "54254594495",
+    "project_id": "inxtagram-ijse",
+    "storage_bucket": "inxtagram-ijse.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:54254594495:android:ecd4d283abaa9fd60f190a",
+        "android_client_info": {
+          "package_name": "com.inxtagram"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "54254594495-bu96ahumpfc65mrg7102fe19igscsbkg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.inxtagram",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "54254594495-c66dt4egj57oo0evulrbusj9i6vkpfl3.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB5X_7rzRRB6D_19JR-PrwcgR3p6XIIBVI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "54254594495-c66dt4egj57oo0evulrbusj9i6vkpfl3.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -15,9 +15,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-               BuildableName = "instagramClone.app"
-               BlueprintName = "instagramClone"
-               ReferencedContainer = "container:instagramClone.xcodeproj">
+               BuildableName = "inxtagram.app"
+               BlueprintName = "inxtagram"
+               ReferencedContainer = "container:inxtagram.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -33,9 +33,9 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "00E356ED1AD99517003FC87E"
-               BuildableName = "instagramCloneTests.xctest"
-               BlueprintName = "instagramCloneTests"
-               ReferencedContainer = "container:instagramClone.xcodeproj">
+               BuildableName = "inxtagramTests.xctest"
+               BlueprintName = "inxtagramTests"
+               ReferencedContainer = "container:inxtagram.xcodeproj">
             </BuildableReference>
          </TestableReference>
       </Testables>
@@ -55,9 +55,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "instagramClone.app"
-            BlueprintName = "instagramClone"
-            ReferencedContainer = "container:instagramClone.xcodeproj">
+            BuildableName = "inxtagram.app"
+            BlueprintName = "inxtagram"
+            ReferencedContainer = "container:inxtagram.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </LaunchAction>
@@ -72,9 +72,9 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "13B07F861A680F5B00A75B9A"
-            BuildableName = "instagramClone.app"
-            BlueprintName = "instagramClone"
-            ReferencedContainer = "container:instagramClone.xcodeproj">
+            BuildableName = "inxtagram.app"
+            BlueprintName = "inxtagram"
+            ReferencedContainer = "container:inxtagram.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>
