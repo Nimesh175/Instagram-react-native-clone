@@ -4,6 +4,8 @@ import {StyleSheet, TouchableOpacity, View} from 'react-native';
 import EmptyView from '../../components/EmptyView';
 import {colors, dimensions, fontFamilies} from '../../configurations/constants';
 import {GoogleSignin, GoogleSigninButton} from '@react-native-google-signin/google-signin';
+import firestore from '@react-native-firebase/firestore';
+import auth from '@react-native-firebase/auth';
 
 const LoginScreen = ({navigation}) => {
 
@@ -24,15 +26,28 @@ const LoginScreen = ({navigation}) => {
         const {idToken, user} = await GoogleSignin.signIn();
 
         // Create a Google credential with the token
-        const googleCredential = auth.GoogleAuthProvider.credential(idToken);
+        const googleCredential =await auth.GoogleAuthProvider.credential(idToken);
 
         // Sign-in the user with the credential
-        const credential = auth()
+        const credential =await auth()
         .signInWithCredential(googleCredential)
-
-
+        .then(creteUser => {
+            const uid = creteUser.user.uid;
+            const subscriber = firestore().collection('Users').doc(uid);
+                subscriber.get().then(doc => {
+                    if (doc?.exists) {
+                    console.log('Document data:', doc?.data());
+                    } else {
+                    //// doc.data() will be undefined in this case
+                    console.log('No such document!');
+                    //firestore: create new user
+                    
+                    }
+                });
+        });
+        await GoogleSignin.signOut();
         } catch(error) {
-
+            console.log("SIGNIN ERROR: ", error);
         }
     }
 
