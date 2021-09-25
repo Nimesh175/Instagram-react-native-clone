@@ -40,6 +40,7 @@ const HomeScreen = ({navigation}) => {
     React.useEffect(() => {
         const subscriber = firestore()
           .collection('NewsFeed')
+          .orderBy("date", "desc")
           .onSnapshot(onResult, onError);
     
         // Stop listening for updates when no longer required
@@ -52,8 +53,13 @@ const HomeScreen = ({navigation}) => {
         let resultList = []
          await QuerySnapshot._docs.map(data => {
             console.log(data._data.date);
-            resultList.unshift(data._data)
-        })
+            resultList.push(data._data)
+        });
+
+        // await resultList.sort(function (a, b) {
+        //     return a.date - b.date;
+        // })
+
         setDataList(resultList)
       }
       

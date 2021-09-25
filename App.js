@@ -16,8 +16,14 @@ import {
 import { NativeBaseProvider } from 'native-base';
 import { NavigationContainer } from '@react-navigation/native';
 import StackNavigations from './src/navigations/StackNavigations';
+import SplashScreen from 'react-native-splash-screen';
 
 const App = () => {
+  
+  React.useEffect(()=> {
+    SplashScreen.hide();
+  }, []);
+
   return (
     <SafeAreaView style={styles.container}>
       <StatusBar barStyle='dark-content' backgroundColor="#fff" />
