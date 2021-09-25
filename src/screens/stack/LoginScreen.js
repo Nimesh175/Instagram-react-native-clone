@@ -8,6 +8,8 @@ import * as EmailValidator from 'email-validator';
 import firestore from '@react-native-firebase/firestore';
 import auth from '@react-native-firebase/auth';
 import Loader from '../../components/Loader';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 
 const LoginScreen = ({navigation}) => {
 
@@ -26,6 +28,26 @@ const LoginScreen = ({navigation}) => {
           });
     }, []);
 
+    /* ASYNCSTORAGE */
+    const storeData = async (value) => {
+        try {
+          await AsyncStorage.removeItem('USERDATA')
+          await AsyncStorage.setItem('USERDATA', JSON.stringify(value))
+          console.log("ASYNC: SAVE: ",value );
+        } catch (e) {
+          // saving error
+        }
+      }
+
+      const getData = async () => {
+        try {
+          const jsonValue = await AsyncStorage.getItem('USERDATA')
+          return jsonValue != null ? JSON.parse(jsonValue) : null;
+        } catch(e) {
+          // error reading value
+          console.warn( "AYNCSTORAGE: [GET] ERROR: ",e);
+        }
+      }
 
     /* EMAIL/PASSWORD: login function */
     const EmailPasswordLoginSignOutHandler = async () => {
@@ -42,24 +64,28 @@ const LoginScreen = ({navigation}) => {
 
                 alert("Sign up, ypu don't have an account.")
 
-                    //firestore: save new user
-                    // firestore()
-                    // .collection('Users')
-                    // .doc(createuser.user.uid)
-                    // .set({
-                    //     uid: createuser.user.uid,
-                    //     displayName: email,
-                    //     email: email,
-                    //     photoURL: null,
-                    //     password: password,
-                    // })
-                    // .then(() => {
-                    //     console.log("Email/PASSWORD: sign-up successfully");
-                    //     setloggedIn(true)
-                    //     //// save to firestore db and log in
-                    //     navigation.navigate('Tab');
-                    // })
-                    // .catch(error => console.log("ERROR: User not added!"));
+
+                const {displayName, password, phoneNumber, photoURL, email, uid} = createuser.user;
+               
+                    //ASYNCSTORAGE: store data
+                    storeData( {
+                        uid: createuser.user.uid,
+                        displayName: userDetails.fullName,
+                        email: userDetails.email,
+                        photoURL: null,
+                        base64String: userDetails?.base64String,
+                        base64Type: userDetails?.base64Type,
+                        password: userDetails.password,
+                    })
+                    console.log("ASYNCSTORAGE: USERDATA: ",  {
+                        uid: createuser.user.uid,
+                        displayName: userDetails.fullName,
+                        email: userDetails.email,
+                        photoURL: null,
+                        base64String: userDetails?.base64String,
+                        base64Type: userDetails?.base64Type,
+                        password: userDetails.password,
+                    });
 
 
 
@@ -82,6 +108,9 @@ const LoginScreen = ({navigation}) => {
                         if(data._data.email === email) {
                             if(data._data.password === password) {
                                 setGoogleLoader(false)
+
+                                //Asyncstorage: store-data
+                                storeData(data._data)
                                 navigation.navigate('Tab');
                             }
                             else {
@@ -137,9 +166,27 @@ const LoginScreen = ({navigation}) => {
                             //TODO: do somethings with sign-in
                             console.log("GOOGLE: sign-in successfully");
                             setloggedIn(true)
+                            
+                            const {displayName, password, phoneNumber, photoURL, email, uid} = doc?.data()
+                            //ASYNCSTORAGE: store data
+                            storeData({
+                                uid: uid,
+                                displayName: displayName,
+                                email: email,
+                                photoURL: photoURL,
+                                password: null,
+                            })
+                            console.log("ASYNCSTORAGE: USERDATA: ", {
+                                uid: uid,
+                                displayName: displayName,
+                                email: email,
+                                photoURL: photoURL,
+                                password: null,
+                            });
+
                             navigation.navigate('Tab');
                         }
-
+                        
                            
                     } else {
                          //// doc.data() will be undefined in this case

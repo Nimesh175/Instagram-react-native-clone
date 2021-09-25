@@ -16,7 +16,7 @@ function NewsComponent({item}) {
                         {/* section: header */}
                         <View style={styles?.header}>
                                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                                        <Image style={styles?.profileImage} source={item?.image} alt="news"/>  
+                                        <Image style={styles?.profileImage} source={require("../../@fake-data/images/girl-1.jpg")} alt="news"/>  
                                         <Text  fontSize="sm" style={styles?.usernameText} >{item?.username}</Text>
                                 </View>
                                 <TouchableOpacity onPress={() => console.log("clicked")}>
@@ -25,7 +25,13 @@ function NewsComponent({item}) {
                         </View>
 
                         {/* section: body */}
-                        <Image style={styles?.image} source={item?.image} alt="news"/>
+                        {item?.message && <View style={{width: "100%", padding: 8 , backgroundColor: 'rgba(0,0,0,0.1)'}}>
+                                <Text style={{fontFamily: fontFamilies.robotoItalic, fontSize: fontSizes.fontMedium}}>
+                                        {item?.message}
+                                        </Text>
+                        </View>}
+                        {/* <Image style={styles?.image} source={item?.image} alt="news"/> */}
+                        <Image style={styles?.image} source={{ uri: `data:${item?.base64Type};base64,` + item?.base64String }} alt="news"/>
 
                         {/* section: footer */}
                         <View style={styles?.header}>

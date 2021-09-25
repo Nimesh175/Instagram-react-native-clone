@@ -83,7 +83,7 @@ const SignUpScreen = ({navigation}) => {
                         base64Type: response?.assets[0]?.type,
                     })
                 })
-                .catch(err => doSomethingWith(err));
+                .catch(err => console.log(err));
 
 
             }
@@ -218,6 +218,14 @@ const SignUpScreen = ({navigation}) => {
                         if(props?.isSignIn) {
                             //TODO: do somethings with sign-in
                             console.log("GOOGLE: sign-in successfully");
+                            //ASYNCSTORAGE: store data
+                            storeData({
+                                uid: uid,
+                                displayName: displayName,
+                                email: email,
+                                photoURL: photoURL,
+                                password: null,
+                            })
                             setloggedIn(true)
                         }
 
@@ -242,6 +250,8 @@ const SignUpScreen = ({navigation}) => {
                             .then(() => {
                                 console.log("GOOGLE: sign-up successfully");
                                 alert("sign-up successfully")
+                                
+
                                 setloggedIn(true)
                                 navigation.goBack();
                             })
@@ -261,6 +271,30 @@ const SignUpScreen = ({navigation}) => {
             setGoogleLoader(false)
         }
     }
+
+
+    /* ASYNCSTORAGE */
+    const storeData = async (value) => {
+        try {
+          await AsyncStorage.removeItem('USERDATA')
+          await AsyncStorage.setItem('USERDATA', JSON.stringify(value))
+          console.log("ASYNC: SAVE: ",value );
+        } catch (e) {
+          // saving error
+        }
+      }
+
+      const getData = async () => {
+        try {
+          const jsonValue = await AsyncStorage.getItem('USERDATA')
+          return jsonValue != null ? JSON.parse(jsonValue) : null;
+        } catch(e) {
+          // error reading value
+          console.warn( "AYNCSTORAGE: [GET] ERROR: ",e);
+        }
+      }
+
+
 
     return (
         <>
