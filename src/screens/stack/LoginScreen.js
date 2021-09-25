@@ -33,7 +33,6 @@ const LoginScreen = ({navigation}) => {
         try {
           await AsyncStorage.removeItem('USERDATA')
           await AsyncStorage.setItem('USERDATA', JSON.stringify(value))
-          console.log("ASYNC: SAVE: ",value );
         } catch (e) {
           // saving error
         }
@@ -77,15 +76,15 @@ const LoginScreen = ({navigation}) => {
                         base64Type: userDetails?.base64Type,
                         password: userDetails.password,
                     })
-                    console.log("ASYNCSTORAGE: USERDATA: ",  {
-                        uid: createuser.user.uid,
-                        displayName: userDetails.fullName,
-                        email: userDetails.email,
-                        photoURL: null,
-                        base64String: userDetails?.base64String,
-                        base64Type: userDetails?.base64Type,
-                        password: userDetails.password,
-                    });
+                    // console.log("ASYNCSTORAGE: USERDATA: ",  {
+                    //     uid: createuser.user.uid,
+                    //     displayName: userDetails.fullName,
+                    //     email: userDetails.email,
+                    //     photoURL: null,
+                    //     base64String: userDetails?.base64String,
+                    //     base64Type: userDetails?.base64Type,
+                    //     password: userDetails.password,
+                    // });
 
 
 
@@ -174,15 +173,17 @@ const LoginScreen = ({navigation}) => {
                                 displayName: displayName,
                                 email: email,
                                 photoURL: photoURL,
-                                password: null,
+                                password: password,
+                                base64String:null,
+                                base64Type: null,
                             })
-                            console.log("ASYNCSTORAGE: USERDATA: ", {
-                                uid: uid,
-                                displayName: displayName,
-                                email: email,
-                                photoURL: photoURL,
-                                password: null,
-                            });
+                            // console.log("ASYNCSTORAGE: USERDATA: ", {
+                            //     uid: uid,
+                            //     displayName: displayName,
+                            //     email: email,
+                            //     photoURL: photoURL,
+                            //     password: null,
+                            // });
 
                             navigation.navigate('Tab');
                         }

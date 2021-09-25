@@ -3,6 +3,7 @@ import { View,  StyleSheet, TouchableOpacity, Image } from 'react-native';
 import {  Center, Text } from 'native-base';
 import {colors, dimensions, fontSizes, fontFamilies} from '../../configurations/constants';
 import {IMAGES} from '../../assets';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 function NewsComponent({item}) {
 
@@ -11,13 +12,54 @@ function NewsComponent({item}) {
                 isBookmarkActive: false,
         });
 
+        React.useEffect(() => {
+                //async storage access
+                getData()
+        },[])
+
+
+        const [asyncState , setAsyncState] = React.useState({
+                uid: null,
+                displayName: null,
+                email: null,
+                photoURL: null,
+                base64String: null,
+                base64Type: null,
+                password: null,
+        });
+
+        const getData = async () => {
+                try {
+                  const jsonValue = await AsyncStorage.getItem('USERDATA')
+
+                  if( jsonValue) { 
+                     const {uid, displayName,email, photoURL, base64String, base64Type, password} = JSON.parse(jsonValue)
+                     setAsyncState({
+                        uid: uid,
+                        displayName: displayName,
+                        email: email,
+                        photoURL: photoURL,
+                        base64String: base64String,
+                        base64Type: base64Type,
+                        password: password,  
+                     })
+
+                     console.log("jsonValue:::;: ", jsonValue);
+                  }
+
+                } catch(e) {
+                  // error reading value
+                  console.warn( "AYNCSTORAGE: [GET] ERROR: ",e);
+                }
+              }
+
         return (
                 <Center style={styles?.container}>
                         {/* section: header */}
                         <View style={styles?.header}>
                                 <View style={{flexDirection: 'row', alignItems: 'center'}}>
-                                        <Image style={styles?.profileImage} source={require("../../@fake-data/images/girl-1.jpg")} alt="news"/>  
-                                        <Text  fontSize="sm" style={styles?.usernameText} >{item?.username}</Text>
+                                        <Image style={styles?.profileImage} source={require("../../@fake-data/images/boy-1.jpg")} alt="news"/>  
+                                        <Text  fontSize="sm" style={styles?.usernameText} >@{asyncState.displayName}</Text>
                                 </View>
                                 <TouchableOpacity onPress={() => console.log("clicked")}>
                                         <Image style={styles?.moreImage} source={IMAGES?.more} alt="message"/>
@@ -25,8 +67,8 @@ function NewsComponent({item}) {
                         </View>
 
                         {/* section: body */}
-                        {item?.message && <View style={{width: "100%", padding: 8 , backgroundColor: 'rgba(0,0,0,0.1)'}}>
-                                <Text style={{fontFamily: fontFamilies.robotoItalic, fontSize: fontSizes.fontMedium}}>
+                        {item?.message && <View style={{width: "100%", paddingHorizontal: dimensions.paddingLevel3 , paddingVertical: 8 , backgroundColor: 'rgba(0,0,0,0.1)'}}>
+                                <Text style={{fontFamily: fontFamilies.robotoItalic, fontWeight: "bold", fontSize: fontSizes.fontMedium}}>
                                         {item?.message}
                                         </Text>
                         </View>}
