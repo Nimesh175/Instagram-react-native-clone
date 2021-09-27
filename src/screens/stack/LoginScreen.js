@@ -44,7 +44,7 @@ const LoginScreen = ({navigation}) => {
           return jsonValue != null ? JSON.parse(jsonValue) : null;
         } catch(e) {
           // error reading value
-          console.warn( "AYNCSTORAGE: [GET] ERROR: ",e);
+        //   console.warn( "AYNCSTORAGE: [GET] ERROR: ",e);
         }
       }
 
@@ -61,22 +61,13 @@ const LoginScreen = ({navigation}) => {
                 console.log("RESULT: ", createuser)
                 setGoogleLoader(false)
 
-                alert("Sign up, ypu don't have an account.")
+                alert("Sign up, you don't have an account.")
 
 
-                const {displayName, password, phoneNumber, photoURL, email, uid} = createuser.user;
-               
+                // const {displayName, password, phoneNumber, photoURL, email, uid} = createuser.user;
+
                     //ASYNCSTORAGE: store data
-                    storeData( {
-                        uid: createuser.user.uid,
-                        displayName: userDetails.fullName,
-                        email: userDetails.email,
-                        photoURL: null,
-                        base64String: userDetails?.base64String,
-                        base64Type: userDetails?.base64Type,
-                        password: userDetails.password,
-                    })
-                    // console.log("ASYNCSTORAGE: USERDATA: ",  {
+                    // storeData( {
                     //     uid: createuser.user.uid,
                     //     displayName: userDetails.fullName,
                     //     email: userDetails.email,
@@ -84,19 +75,35 @@ const LoginScreen = ({navigation}) => {
                     //     base64String: userDetails?.base64String,
                     //     base64Type: userDetails?.base64Type,
                     //     password: userDetails.password,
-                    // });
+                    // })
+
+                    //// console.log("ASYNCSTORAGE: USERDATA: ",  {
+                    ////    uid: createuser.user.uid,
+                    ////   displayName: userDetails.fullName,
+                    ////   email: userDetails.email,
+                    ////   photoURL: null,
+                    ////  base64String: userDetails?.base64String,
+                    ////   base64Type: userDetails?.base64Type,
+                    ////  password: userDetails.password,
+                    ////});
 
 
 
-                // auth()
-                // .signOut()
-                // .then(() => console.log('User signed out!'));
+                //// auth()
+                //// .signOut()
+                //// .then(() => console.log('User signed out!'));
+
+
+
+
+
+
             })
             .catch(error => {
                 if (error.code === 'auth/email-already-in-use') {
                 console.log('That email address is already in use!');
                 //TODO: auth/email-already-in-use
-
+                setGoogleLoader(false)
                    
                 firestore()
                 .collection('Users')
@@ -105,6 +112,8 @@ const LoginScreen = ({navigation}) => {
                     result.forEach(data => {
                         console.log(data._data);
                         if(data._data.email === email) {
+                         
+                            alert("Password is wrong!")
                             if(data._data.password === password) {
                                 setGoogleLoader(false)
 
@@ -120,14 +129,16 @@ const LoginScreen = ({navigation}) => {
                         }
                     })
                 })
+
                 }
     
                 if (error.code === 'auth/invalid-email') {
                 console.log('That email address is invalid!');
+                alert("That email address is invalid!")
                 setGoogleLoader(false)
                 }
                 
-                console.warn(error);
+                // console.warn(error);
             });
         } else {
             setGoogleLoader(false)

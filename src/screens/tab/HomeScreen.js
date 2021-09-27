@@ -11,8 +11,7 @@ import firestore from '@react-native-firebase/firestore';
 const HomeScreen = ({navigation}) => {
     const [dataList, setDataList] = React.useState([]);
 
-    // React.useEffect( () => {
-       
+    // React.useEffect( () => {  
     //     // // observe state
     //     // const subscriber = firestore().collection('NewsFeed')
     //     // // .orderBy('date', 'desc')
@@ -30,11 +29,6 @@ const HomeScreen = ({navigation}) => {
 
     //     // // Stop listening for updates when no longer required
     //     // return () => subscriber();
-
-       
-            
-        
-        
     // }, []);
   
     React.useEffect(() => {

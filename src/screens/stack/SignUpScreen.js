@@ -1,16 +1,16 @@
+import auth from '@react-native-firebase/auth';
+import firestore from '@react-native-firebase/firestore';
+import { GoogleSignin } from '@react-native-google-signin/google-signin';
+import * as EmailValidator from 'email-validator';
 import { Button, Center, Input, Text } from 'native-base';
 import React from 'react';
 import { Image, StyleSheet, TouchableOpacity, View } from 'react-native';
-import {launchImageLibrary} from 'react-native-image-picker';
+import ImgToBase64 from 'react-native-image-base64';
+import { launchImageLibrary } from 'react-native-image-picker';
 import { IMAGES } from '../../assets';
 import EmptyView from '../../components/EmptyView';
-import { colors, dimensions, fontFamilies } from '../../configurations/constants';
-import {GoogleSignin, GoogleSigninButton, statusCodes} from '@react-native-google-signin/google-signin';
-import firestore from '@react-native-firebase/firestore';
-import auth from '@react-native-firebase/auth';
 import Loader from '../../components/Loader';
-import ImgToBase64 from 'react-native-image-base64';
-import * as EmailValidator from 'email-validator';
+import { colors, dimensions, fontFamilies } from '../../configurations/constants';
 
 const SignUpScreen = ({navigation}) => {
 
@@ -175,7 +175,7 @@ const SignUpScreen = ({navigation}) => {
                 console.log('That email address is invalid!');
                 }
                 setGoogleLoader(false)
-                console.warn(error);
+                // console.log(error);
             });
         } else {
             alert("re-type password not matched!")
@@ -290,7 +290,7 @@ const SignUpScreen = ({navigation}) => {
           return jsonValue != null ? JSON.parse(jsonValue) : null;
         } catch(e) {
           // error reading value
-          console.warn( "AYNCSTORAGE: [GET] ERROR: ",e);
+          console.log( "AYNCSTORAGE: [GET] ERROR: ",e);
         }
       }
 
@@ -298,12 +298,12 @@ const SignUpScreen = ({navigation}) => {
 
     return (
         <>
-         <Loader isLoading={googleLoader}/>
+        <Loader isLoading={googleLoader}/>
        <Center flex={1} style={styles?.container}>
         {/* header section: logo name */}
         <Text fontSize="5xl" style={styles?.textLogo}>Inxtagram</Text>
         {/* <EmptyView style={{marginTop: dimensions.heightLevel1}}/> */}
-        <Text fontSize="lg">Sign up to see photos and videos from your friends.</Text>
+        <Text fontSize="sm">Sign up to see photos and videos from your friends.</Text>
 
         <EmptyView style={{marginTop: dimensions.heightLevel2}}/>
 
@@ -413,7 +413,7 @@ const SignUpScreen = ({navigation}) => {
 
         {/* section: forgot text */}
         <Text fontSize="sm">By signing up, you agree to our Terms,</Text>
-        <Text fontSize="sm"> Data, Policy and Cookies Policy.</Text>
+        <Text fontSize="sm"> Data, Policy and Cookies Policy.</Text> 
 
         <EmptyView style={{marginTop: dimensions.heightLevel1}}/>
 
@@ -429,14 +429,15 @@ const SignUpScreen = ({navigation}) => {
             </TouchableOpacity>
         </View>
 
-      </Center>
-      </>
+    </Center>
+    </>
     );
 };
 
 const styles = StyleSheet.create({
     container: {
         backgroundColor: colors?.white,
+        // transform: [{scale: 0.8}]
     },
 
     textLogo: {
